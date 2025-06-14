@@ -11,6 +11,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.firefox import GeckoDriverManager
 
 
+
+
+
 def dismiss_cookie_banner(driver, wait):
     try:
         overlay = wait.until(
@@ -30,6 +33,7 @@ def dismiss_cookie_banner(driver, wait):
 def scrape_sap_jobs():
     options = Options()
     options.headless = True
+    options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox"
 
     service = Service(GeckoDriverManager().install())
     driver = webdriver.Firefox(service=service, options=options)

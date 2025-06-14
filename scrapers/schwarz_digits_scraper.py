@@ -23,6 +23,8 @@ def dismiss_cookie_banner(driver, wait):
 def scrape_digits_jobs():
     options = Options()
     options.headless = True
+    options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox"
+
 
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
     wait = WebDriverWait(driver, 10)

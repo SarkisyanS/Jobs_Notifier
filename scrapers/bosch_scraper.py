@@ -27,6 +27,8 @@ def dismiss_cookie_banner(driver):
 def scrape_bosch_jobs():
     options = Options()
     options.headless = True
+    options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox"
+
 
     service = Service(GeckoDriverManager().install())
     driver = webdriver.Firefox(service=service, options=options)

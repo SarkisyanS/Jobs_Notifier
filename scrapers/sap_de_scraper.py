@@ -58,6 +58,8 @@ def apply_student_job_filters(driver, wait):
 def scrape_sap_de_jobs():
     options = Options()
     options.headless = True
+    options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox"
+
 
     service = Service(GeckoDriverManager().install())
     driver = webdriver.Firefox(service=service, options=options)

@@ -5,8 +5,8 @@ import asyncio
 from telegram import Bot
 from telegram.error import TelegramError
 
-TOKEN = ""
-CHAT_ID = ""
+TOKEN = input("YOUR API TOKEN")
+CHAT_ID = "965785315"
 NEW_JOBS_GLOB = "data/new_jobs_*.csv"
 
 def load_new_jobs(filepath):
