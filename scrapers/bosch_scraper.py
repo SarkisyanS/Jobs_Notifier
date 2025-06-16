@@ -1,6 +1,7 @@
 import time
 import re
 import pandas as pd
+import os
 
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
@@ -107,11 +108,14 @@ def scrape_bosch_jobs():
     except Exception as e:
         print("Error scraping job cards:", e)
 
-    driver.quit()
-    return pd.DataFrame(jobs)
+    df = pd.DataFrame(jobs)
+    os.makedirs("data", exist_ok=True)
+    df.to_csv("data/jobs_bosch.csv", index=False)
+    print(f"✅ Scraped {len(df)} BOSCH jobs and saved to data/jobs_sap.csv")
+
+    return df
 
 
 if __name__ == "__main__":
-    df = scrape_bosch_jobs()
-    df.to_csv("data/jobs_bosch.csv", index=False)
-    print(f"Scraped {len(df)} Bosch jobs and saved to data/jobs_bosch.csv")
+    scrape_bosch_jobs()
+

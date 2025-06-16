@@ -1,6 +1,7 @@
 import time
 import urllib.parse
 import pandas as pd
+import os
 
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
@@ -9,9 +10,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.firefox import GeckoDriverManager
-
-
-
 
 
 def dismiss_cookie_banner(driver, wait):
@@ -33,11 +31,10 @@ def dismiss_cookie_banner(driver, wait):
 def scrape_sap_jobs():
     options = Options()
     options.headless = True
-    options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox"
 
     service = Service(GeckoDriverManager().install())
     driver = webdriver.Firefox(service=service, options=options)
-    wait = WebDriverWait(driver, 1)
+    wait = WebDriverWait(driver, 5)
 
     base_url = "https://jobs.sap.com/search/"
     base_params = {
@@ -83,7 +80,12 @@ def scrape_sap_jobs():
                     title = row.find_element(By.CSS_SELECTOR, "td.colTitle a.jobTitle-link").text.strip()
                     location = row.find_element(By.CSS_SELECTOR, "td.colLocation span.jobLocation").text.strip()
                     link = row.find_element(By.CSS_SELECTOR, "td.colTitle a.jobTitle-link").get_attribute("href")
-                    jobs.append({"title": title, "location": location, "link": link, "company": "SAP"})
+                    jobs.append({
+                        "title": title,
+                        "location": location,
+                        "link": link,
+                        "company": "SAP"
+                    })
                 except Exception:
                     continue
         except Exception:
@@ -92,9 +94,14 @@ def scrape_sap_jobs():
         time.sleep(1)
 
     driver.quit()
-    return pd.DataFrame(jobs)
+
+    df = pd.DataFrame(jobs)
+    os.makedirs("data", exist_ok=True)
+    df.to_csv("data/jobs_sap.csv", index=False)
+    print(f"✅ Scraped {len(df)} SAP jobs and saved to data/jobs_sap.csv")
+
+    return df
+
 
 if __name__ == "__main__":
-    df = scrape_sap_jobs()
-    df.to_csv("data/jobs_sap.csv", index=False)
-    print(f"Scraped {len(df)} SAP jobs and saved to data/jobs_sap.csv")
+    scrape_sap_jobs()

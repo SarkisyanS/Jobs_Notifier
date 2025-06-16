@@ -65,4 +65,3 @@ def compare_and_save_new_jobs(company_name):
 if __name__ == "__main__":
     for company in ["sap", "bosch", "schwarz_jobs"]:
         compare_and_save_new_jobs(company)
-    

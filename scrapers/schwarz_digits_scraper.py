@@ -2,6 +2,7 @@ import time
 import math
 import re
 import pandas as pd
+import os
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -29,7 +30,7 @@ def scrape_digits_jobs():
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
     wait = WebDriverWait(driver, 10)
 
-    base_url = "https://schwarz-digits.de/jobsearch"
+    base_url = "https://it.schwarz/jobsearch?"
     driver.get(base_url)
     dismiss_cookie_banner(driver, wait)
 
@@ -80,10 +81,14 @@ def scrape_digits_jobs():
         time.sleep(1)  # be polite to server
 
     driver.quit()
-    return pd.DataFrame(jobs)
+    df = pd.DataFrame(jobs)
+    os.makedirs("data", exist_ok=True)
+    df.to_csv("data/jobs_schwarz_digits.csv", index=False)
+    print(f"✅ Scraped {len(df)} schwarz_digits jobs and saved to data/jobs_sap.csv")
+
+    return df
 
 
 if __name__ == "__main__":
-    df = scrape_digits_jobs()
-    df.to_csv("data/jobs_digits.csv", index=False)
-    print(f"Scraped {len(df)} Schwarz Digits jobs and saved to data/jobs_digits.csv")
+    scrape_digits_jobs()
+    

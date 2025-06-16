@@ -1,6 +1,7 @@
 import time
 import urllib.parse
 import pandas as pd
+import os
 
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
@@ -116,10 +117,13 @@ def scrape_sap_de_jobs():
             continue
 
     driver.quit()
-    return pd.DataFrame(jobs)
+    df = pd.DataFrame(jobs)
+    os.makedirs("data", exist_ok=True)
+    df.to_csv("data/jobs_sap_de.csv", index=False)
+    print(f"✅ Scraped {len(df)} SAP_de jobs and saved to data/jobs_sap.csv")
+
+    return df
 
 
 if __name__ == "__main__":
-    df = scrape_sap_de_jobs()
-    df.to_csv("data/jobs_sap_de.csv", index=False)
-    print(f"Scraped {len(df)} SAP_de jobs and saved to data/jobs_sap_de.csv")
+    scrape_sap_de_jobs()
