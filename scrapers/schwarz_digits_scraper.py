@@ -39,13 +39,13 @@ def scrape_digits_jobs():
         EC.presence_of_element_located(
             (By.CSS_SELECTOR, "h2.digits-headline.digits-search__result-headline")
         )
-    ).text  # e.g. "Unsere Stellenangebote (353)"
+    ).text  
 
     match = re.search(r"\((\d+)\)", total_jobs_text)
     total_jobs = int(match.group(1)) if match else 0
     print(f"Total jobs found: {total_jobs}")
 
-    page_size = 10  # Adjust if the website shows a different number of jobs per page
+    page_size = 10 
     total_pages = math.ceil(total_jobs / page_size)
     print(f"Total pages: {total_pages}")
 
@@ -56,7 +56,7 @@ def scrape_digits_jobs():
         print(f"Scraping page {page} - {url}")
         driver.get(url)
         dismiss_cookie_banner(driver, wait)
-        time.sleep(2)  # Wait for jobs to load
+        time.sleep(2)  
 
         wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "digits-list-job-item")))
         job_cards = driver.find_elements(By.CLASS_NAME, "digits-list-job-item")
@@ -78,13 +78,13 @@ def scrape_digits_jobs():
                 print(f"Error scraping a job card: {e}")
                 continue
 
-        time.sleep(1)  # be polite to server
+        time.sleep(1)  
 
     driver.quit()
     df = pd.DataFrame(jobs)
     os.makedirs("data", exist_ok=True)
     df.to_csv("data/jobs_schwarz_digits.csv", index=False)
-    print(f"✅ Scraped {len(df)} schwarz_digits jobs and saved to data/jobs_sap.csv")
+    print(f"Scraped {len(df)} schwarz_digits jobs and saved to data/jobs_sap.csv")
 
     return df
 

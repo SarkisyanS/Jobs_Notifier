@@ -47,7 +47,6 @@ def apply_student_job_filters(driver, wait):
         country_select.select_by_value("DE")
         time.sleep(1)
 
-        # Click "Suche starten"
         search_button = driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Suche starten']")
         search_button.click()
 
@@ -74,15 +73,13 @@ def scrape_sap_de_jobs():
     dismiss_cookie_banner(driver, wait)
     apply_student_job_filters(driver, wait)
 
-    # Extract filtered URL
     filtered_url = driver.current_url
     parsed = urllib.parse.urlparse(filtered_url)
     filtered_params = urllib.parse.parse_qs(parsed.query)
-    filtered_params.pop("startrow", None)  # remove old startrow if present
+    filtered_params.pop("startrow", None)  
     flattened_params = {k: v[0] for k, v in filtered_params.items()}
     base_url = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
 
-    # Determine total pages
     try:
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a.paginationItemLast")))
         last_page_button = driver.find_element(By.CSS_SELECTOR, "a.paginationItemLast")
@@ -94,7 +91,6 @@ def scrape_sap_de_jobs():
 
     print(f"Total pages: {total_pages}")
 
-    # Iterate through all pages using filtered URL and manual pagination
     for page in range(total_pages):
         startrow = page * page_size
         paginated_params = flattened_params.copy()
@@ -120,7 +116,7 @@ def scrape_sap_de_jobs():
     df = pd.DataFrame(jobs)
     os.makedirs("data", exist_ok=True)
     df.to_csv("data/jobs_sap_de.csv", index=False)
-    print(f"✅ Scraped {len(df)} SAP_de jobs and saved to data/jobs_sap.csv")
+    print(f"Scraped {len(df)} SAP_de jobs and saved to data/jobs_sap.csv")
 
     return df
 

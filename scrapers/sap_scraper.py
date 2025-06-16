@@ -98,7 +98,7 @@ def scrape_sap_jobs():
     df = pd.DataFrame(jobs)
     os.makedirs("data", exist_ok=True)
     df.to_csv("data/jobs_sap.csv", index=False)
-    print(f"✅ Scraped {len(df)} SAP jobs and saved to data/jobs_sap.csv")
+    print(f"Scraped {len(df)} SAP jobs and saved to data/jobs_sap.csv")
 
     return df
 

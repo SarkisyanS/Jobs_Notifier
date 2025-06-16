@@ -31,7 +31,6 @@ def compare_and_save_new_jobs(company_name):
     else:
         old_jobs_df = pd.DataFrame(columns=new_jobs_df.columns)
 
-    # Normalize links and create unique_key from link
     if 'unique_key' not in new_jobs_df.columns:
         new_jobs_df['unique_key'] = new_jobs_df['link'].apply(normalize)
     else:
@@ -43,19 +42,17 @@ def compare_and_save_new_jobs(company_name):
         else:
             old_jobs_df['unique_key'] = []
 
-    # Drop duplicates within new jobs based on unique_key (link)
     new_jobs_df = new_jobs_df.drop_duplicates(subset='unique_key')
 
-    # Filter out jobs already present in old jobs by unique_key
     new_jobs_df_unique = new_jobs_df[~new_jobs_df['unique_key'].isin(old_jobs_df['unique_key'])]
 
     if not new_jobs_df_unique.empty:
         new_jobs_df_unique.to_csv(new_jobs_filepath, index=False)
         updated_jobs = pd.concat([old_jobs_df, new_jobs_df_unique], ignore_index=True)
         updated_jobs.to_csv(global_jobs_filepath, index=False)
-        print(f"✅ Saved {len(new_jobs_df_unique)} new {company_name} jobs to {new_jobs_filepath}")
+        print(f"Saved {len(new_jobs_df_unique)} new {company_name} jobs to {new_jobs_filepath}")
     else:
-        print(f"ℹ️ No new jobs found for {company_name}.")
+        print(f"ℹNo new jobs found for {company_name}.")
         if os.path.exists(new_jobs_filepath):
             os.remove(new_jobs_filepath)
 

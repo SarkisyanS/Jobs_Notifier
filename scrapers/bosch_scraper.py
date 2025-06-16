@@ -41,7 +41,6 @@ def scrape_bosch_jobs():
 
     jobs = []
 
-    # Get total jobs count
     try:
         total_jobs_text = wait.until(EC.presence_of_element_located((
             By.XPATH, "/html/body/div[1]/div/section[3]/div[2]/h1/span"
@@ -52,8 +51,7 @@ def scrape_bosch_jobs():
         print("Could not get total jobs count:", e)
         total_jobs = 0
 
-    # Load all jobs by clicking "Load More"
-    loaded_jobs = 20  # initial number of loaded jobs
+    loaded_jobs = 20 
     while loaded_jobs < total_jobs:
         try:
             load_more_button = wait.until(EC.element_to_be_clickable((
@@ -61,7 +59,7 @@ def scrape_bosch_jobs():
             )))
             load_more_button.click()
             print("Clicked 'Weitere Ergebnisse laden' button, waiting for jobs to load...")
-            time.sleep(3)  # wait for more jobs to load
+            time.sleep(2)  
 
             btn_text = load_more_button.text
             match = re.search(r"\((\d+) von (\d+)\)", btn_text)
@@ -75,10 +73,9 @@ def scrape_bosch_jobs():
             print("No more 'Load More' button or error, stopping load.")
             break
 
-    # Scrape job cards
     try:
         wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "a.group.flex.flex-col")))
-        time.sleep(2)  # ensure all loaded
+        time.sleep(2)  
         job_cards = driver.find_elements(By.CSS_SELECTOR, "a.group.flex.flex-col")
 
         print(f"Found {len(job_cards)} job cards.\n")
@@ -111,7 +108,7 @@ def scrape_bosch_jobs():
     df = pd.DataFrame(jobs)
     os.makedirs("data", exist_ok=True)
     df.to_csv("data/jobs_bosch.csv", index=False)
-    print(f"✅ Scraped {len(df)} BOSCH jobs and saved to data/jobs_sap.csv")
+    print(f"Scraped {len(df)} BOSCH jobs and saved to data/jobs_sap.csv")
 
     return df
 
