@@ -104,11 +104,12 @@ def scrape_bosch_jobs():
             })
     except Exception as e:
         print("Error scraping job cards:", e)
-
+    
+    driver.quit()
     df = pd.DataFrame(jobs)
     os.makedirs("data", exist_ok=True)
     df.to_csv("data/jobs_bosch.csv", index=False)
-    print(f"Scraped {len(df)} BOSCH jobs and saved to data/jobs_sap.csv")
+    print(f"Scraped {len(df)} BOSCH jobs and saved to data/jobs_bosch.csv")
 
     return df
 
