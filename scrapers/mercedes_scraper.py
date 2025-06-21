@@ -9,18 +9,32 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, ElementClickInterceptedException, NoSuchElementException
 from webdriver_manager.firefox import GeckoDriverManager
 
-
 def get_total_jobs(driver):
     try:
-        heading = WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, 'wb-heading.mjp-title.wb-heading'))
+        # Wait for the element to appear
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "wb-heading.mjp-title.wb-heading"))
         )
-        text = heading.text.strip()
+
+        # Extract text via JavaScript
+        text = driver.execute_script("""
+            const el = document.querySelector('wb-heading.mjp-title.wb-heading');
+            return el ? el.textContent.trim() : '';
+        """)
+        print(f"DEBUG: JS heading text: '{text}'")
+
+        if not text or "Jobs" not in text:
+            raise ValueError("Unexpected heading format or empty text")
+
         total_jobs = int(text.split()[0])
         return total_jobs
-    except Exception:
-        print("Failed to get total jobs count")
+
+    except Exception as e:
+        print(f"Failed to get total jobs count: {e}")
         return None
+
+
+
 
 
 def click_load_more_inside_shadow(driver):

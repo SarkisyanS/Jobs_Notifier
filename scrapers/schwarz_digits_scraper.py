@@ -28,7 +28,7 @@ def scrape_digits_jobs():
 
 
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 3)
 
     base_url = "https://it.schwarz/jobsearch?"
     driver.get(base_url)
@@ -52,7 +52,7 @@ def scrape_digits_jobs():
     jobs = []
 
     for page in range(1, total_pages + 1):
-        url = f"{base_url}?page={page}"
+        url = f"{base_url}page={page}"
         print(f"Scraping page {page} - {url}")
         driver.get(url)
         dismiss_cookie_banner(driver, wait)
